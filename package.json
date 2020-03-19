@@ -1,0 +1,26 @@
+{
+  "name": "passport-miniapp",
+  "version": "1.0.3",
+  "description": "小程序登陆验证",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yujintang/passport-miniapp.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yujintang/passport-miniapp/issues"
+  },
+  "homepage": "https://github.com/yujintang/passport-miniapp#readme",
+  "dependencies": {
+    "iconv-lite": "^0.5.1",
+    "passport": "^0.4.1"
+  },
+  "devDependencies": {
+    "@types/node": "^13.7.4",
+    "@types/passport": "^1.0.2"
+  }
+}
