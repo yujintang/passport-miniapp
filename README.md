@@ -24,6 +24,7 @@ export class MiniAppStrategy extends PassportStrategy(Strategy) {
     appid: configService.get('appid'),
     secret: configService.get('secret'),
     codeField: 'code',
+    passReqToCallback: true,
   });
   }
 

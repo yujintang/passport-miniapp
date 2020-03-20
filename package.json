@@ -1,6 +1,6 @@
 {
   "name": "passport-miniapp",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "小程序登陆验证",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

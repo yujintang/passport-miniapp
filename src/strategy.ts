@@ -1,5 +1,5 @@
 import * as passport from 'passport';
-import {Request} from 'express';
+import { Request } from 'express';
 import * as https from 'https';
 import * as iconv from 'iconv-lite';
 
@@ -8,16 +8,18 @@ export class Strategy extends passport.Strategy {
   private readonly appid: string;
   private readonly secret: string;
   private readonly codeField: string;
-  constructor(options: ConfigOpt, verify: VerifyFunctionWithRequest) {
+  private readonly passReqToCallback: boolean;
+  constructor(options: ConfigOpt, verify: VerifyFunction | VerifyFunctionWithRequest) {
     super();
     this.name = 'miniapp';
     this.verify = verify;
     this.appid = options.appid;
     this.secret = options.secret;
     this.codeField = options.codeField || 'code';
+    this.passReqToCallback = options.passReqToCallback || false;
   }
 
-  verified(err:any, user:any, info:any) {
+  verified(err: any, user: any, info: any) {
     if (err) { return this.error(err); }
     if (!user) { return this.fail(info); }
     this.success(user, info);
@@ -44,7 +46,11 @@ export class Strategy extends passport.Strategy {
             const matchCharset = contentType.match(/(?:charset=)(\w+)/) || [];
             const body = iconv.decode(buff, matchCharset[1] || 'utf8');
             const retbody = JSON.parse(body);
-            this.verify(req, retbody, this.verified.bind(this));
+            if (this.passReqToCallback) {
+              this.verify(req, retbody, this.verified.bind(this));
+            } else {
+              this.verify(retbody, this.verified.bind(this));
+            }
           } else {
             return this.fail('Network Request Error');
           }
@@ -60,6 +66,7 @@ interface ConfigOpt {
   appid: string;
   secret: string;
   codeField?: string;
+  passReqToCallback?: boolean;
 }
 
 interface Retbody {
@@ -75,15 +82,15 @@ interface IVerifyOptions {
 }
 interface VerifyFunction {
   (
-      retbody: Retbody,
-      done: (error: any, user?: any, options?: IVerifyOptions) => void
+    retbody: Retbody,
+    done: (error: any, user?: any, options?: IVerifyOptions) => void
   ): void;
 }
 
 interface VerifyFunctionWithRequest {
   (
-      req: Request,
-      retbody: Retbody,
-      done: (error: any, user?: any, options?: IVerifyOptions) => void
+    req: Request,
+    retbody: Retbody,
+    done: (error: any, user?: any, options?: IVerifyOptions) => void
   ): void;
 }
